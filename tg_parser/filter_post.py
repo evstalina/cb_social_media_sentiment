@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
 import os
 import pandas as pd
 
@@ -22,6 +24,7 @@ if __name__ == "__main__":
         posts = pd.read_csv(args.path + "/" + file_name)
         matches = []
         for text in posts["text"]:
+            
             matches.append(filter_.match(text))
         
         posts["matches"] = matches
