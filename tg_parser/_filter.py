@@ -10,7 +10,7 @@ class SimpleFilter:
         self.morph_analyzer = MorphAnalyzer()
         self.stemmer = SnowballStemmer("russian") 
         df = pd.read_csv(path_words)
-        self.filter_words = {l: df[df["level"] == l]["words"].apply(self.stemmer.stem).values for l in df["level"].unique()}
+        self.filter_words = {l: df[df["level"] == l]["words"].apply(lambda x: self.morph_analyzer.parse(x)[0].normal_form).values for l in df["level"].unique()}
     
     def match(self, text):
         if not self._is_valid(text):
@@ -36,6 +36,9 @@ class SimpleFilter:
 
 
     def _stem_text(self, text):
-        text = re.sub(r'[^a-zA-Zа-яА-Яё ]+', ' ', text)
+        text = text.lower()
+        text = re.sub(r'[^a-zа-яё ]+', ' ', text)
         text = text.replace("  ", " ")
-        return [self.stemmer.stem(self.morph_analyzer.parse(word)[0].normal_form) for word in text.split()]
+        text = text.replace("банк россии", "цб")
+        text = text.replace("центральный банк", "цб")
+        return [self.morph_analyzer.parse(word)[0].normal_form for word in text.split()]
