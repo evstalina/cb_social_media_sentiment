@@ -3,7 +3,7 @@ import time
 import datetime
 import pandas as pd
 
-from parser import *
+from _parser import *
 from tqdm import tqdm
 from argparse import ArgumentParser
 
@@ -44,5 +44,5 @@ if __name__ == "__main__":
             continue
 
         all_posts = all_posts.sort_values(by=['date'])
-        all_posts.to_csv("{}out_posts_{}_200.csv".format(DEFAULT_OUT_DIR, channel))
+        all_posts.to_csv("{}out_posts_{}.csv".format(DEFAULT_OUT_DIR, channel))
         print("Success {} posts parse in channel [{}]".format(len(all_posts), channel))

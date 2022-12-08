@@ -30,7 +30,15 @@ python3 posts_parser.py -s 7d -b 100 -d date.csv -a +7******** -c moscowmap baza
 
 3. Фильтрация постов.
 
-| WIP
+```
+python3 filter_post.py -p out_posts -f outrussianmacro.csv -w filter_words.csv
+```
+
+- -p, --path_dir - путь до директории 
+- -f, --files - список файлов с постами
+- -w, --words_filter - список слов для фильтрации
+
+Сохраняет отфильтрованные посты в директорию `out_posts_filter`.
 
 
 4. Дамп комментариев.

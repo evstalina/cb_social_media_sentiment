@@ -3,7 +3,7 @@ import time
 import datetime
 import pandas as pd
 
-from parser import *
+from _parser import *
 from tqdm import tqdm
 from argparse import ArgumentParser
 
