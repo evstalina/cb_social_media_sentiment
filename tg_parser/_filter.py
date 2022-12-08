@@ -1,3 +1,4 @@
+import re
 import pandas as pd
 
 from nltk.stem.snowball import SnowballStemmer
@@ -34,4 +35,5 @@ class SimpleFilter:
 
 
     def _stem_text(self, text):
+        text = re.sub(r'[^a-zA-Zа-яА-Яё ]+', '', text)
         return [self.stemmer.stem(word) for word in text.split()]

@@ -34,7 +34,7 @@ python3 posts_parser.py -s 7d -b 100 -d date.csv -a +7******** -c moscowmap baza
 python3 filter_post.py -p out_posts -f outrussianmacro.csv -w filter_words.csv
 ```
 
-- -p, --path_dir - путь до директории 
+- -p, --path_dir - путь до дирекщатории 
 - -f, --files - список файлов с постами
 - -w, --words_filter - список слов для фильтрации
 

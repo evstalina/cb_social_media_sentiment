@@ -23,8 +23,12 @@ if __name__ == "__main__":
         matches = []
         for text in posts["text"]:
             matches.append(filter_.match(text))
+        
         posts["matches"] = matches
         filter_posts = posts[posts["matches"]]
+        filter_posts_ = posts[posts["matches"] == False]
 
         filter_posts.to_csv("{}/{}".format(DEFAULT_OUT_DIR, file_name))
+        filter_posts_.to_csv("{}/neg_{}".format(DEFAULT_OUT_DIR, file_name))
+
         print("Success filter [{}]: apply {}/{}".format(file_name, len(filter_posts), len(posts)))
