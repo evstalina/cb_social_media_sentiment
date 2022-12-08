@@ -2,3 +2,4 @@ tg_keys.yaml
 *.session
 /tg_parser/out_comments
 /tg_parser/out_posts
+*.DS_Store

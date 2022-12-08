@@ -68,10 +68,15 @@ def get_posts_in_span(date, span, client, channel_username, batch=100):
     df['channel_username'] = channel_username
     return df, len(res)
 
-def get_client():
+def get_client(number):
     with open("../tg_keys.yaml", 'r') as f:
         tg_keys = yaml.safe_load(f)
-        return TelegramClient(tg_keys["phone_number"], tg_keys["api_id"], tg_keys["api_hash"])
+        tg_key = {}
+        for k in tg_keys["keys"]:
+            if k["phone_number"] == number:
+                tg_key = k
+                break
+        return TelegramClient(tg_key["phone_number"], tg_key["api_id"], tg_key["api_hash"])
 
 def get_replies(client, peer, msg_id=0, limit=0, offset_id=0, add_offset=0, max_id=0, min_id=0, hash=0, offset_date=None):
     return client(GetRepliesRequest(
