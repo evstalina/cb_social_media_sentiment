@@ -42,3 +42,13 @@ class SimpleFilter:
         text = text.replace("банк россии", "цб")
         text = text.replace("центральный банк", "цб")
         return [self.morph_analyzer.parse(word)[0].normal_form for word in text.split()]
+
+class BigramFilter:
+    def __init__(self):
+        self.bigrams = {}
+    def fit(self, path):
+        pass
+    def to_csv(self, path_save):
+        pass
+    def match(self, text):
+        pass

@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 
 
 DEFAULT_OUT_DIR = 'out_comments/'
-SLEEP_SECONDS = 10
+SLEEP_SECONDS = 4
 
 if __name__  == "__main__":
     parser = ArgumentParser()
@@ -25,14 +25,21 @@ if __name__  == "__main__":
     client = get_client(args.acc_number)
     client.start()
 
+    day_x = datetime.datetime(2020, 9, 29).date()
+
     for file_name in args.files:
         posts = pd.read_csv(args.path + "/" + file_name)
+        posts["date"] = pd.to_datetime(posts["date"]).dt.date
+        posts = posts[posts["date"] > day_x]
+       
         comments = pd.DataFrame([])
         for post_id, channel in tqdm(zip(posts["id"], posts["channel_username"])):
-            c = get_comments(client, channel, post_id)
+            try:
+                c = get_comments(client, channel, int(post_id))
+            except:
+                break
             if len(c) > 0:
                 comments = pd.concat([comments, c])
-            break
             time.sleep(SLEEP_SECONDS)
 
         if len(comments) == 0:
@@ -41,3 +48,4 @@ if __name__  == "__main__":
             comments = comments.sort_values(by=['post_id', 'date'])
             comments.to_csv("{}out_comments_{}.csv".format(DEFAULT_OUT_DIR, channel))
             print("Success {} comments parse in channel [{}]".format(len(comments), channel))
+        

@@ -110,10 +110,11 @@ def get_comments(client, channel_username, post_id, batch=100):
     p = get_posts(client, channel_entity, limit=1, offset_id=post_id+1)[-1]
     if p.replies is None:
         return []
+    if p.replies.replies == 0:
+        return []
     
     max_offset = p.replies.max_id
     n_comments = p.replies.replies
-    print(max_offset, n_comments)
     res = []
     
     for i in range(int(n_comments/batch)+1):
