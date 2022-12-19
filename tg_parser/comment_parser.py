@@ -25,7 +25,7 @@ if __name__  == "__main__":
     client = get_client(args.acc_number)
     client.start()
 
-    day_x = datetime.datetime(2020, 9, 29).date()
+    day_x = datetime.datetime(2020, 9, 22).date()
 
     for file_name in args.files:
         posts = pd.read_csv(args.path + "/" + file_name)
@@ -37,6 +37,7 @@ if __name__  == "__main__":
             try:
                 c = get_comments(client, channel, int(post_id))
             except:
+                print("BAN on post [{}] channel [{}]".format(post_id, channel))
                 break
             if len(c) > 0:
                 comments = pd.concat([comments, c])

@@ -4,3 +4,7 @@ tg_keys.yaml
 /tg_parser/out_posts
 /tg_parser/out_posts_filter
 *.DS_Store
+/tg_parser/bigramms.csv
+/tg_parser/cbposts
+/tg_parser/outrt_russian.csv
+/tg_parser/tmp.py

@@ -1,9 +1,17 @@
 import re
+import nltk
+nltk.download("stopwords")
 import pandas as pd
 
+from nltk.corpus import stopwords
 from pymorphy2 import MorphAnalyzer
 from nltk.stem.snowball import SnowballStemmer
+from nltk.collocations import BigramCollocationFinder
+from nltk.metrics import BigramAssocMeasures
 
+STOPWORDS = stopwords.words("russian")
+
+    
 
 class SimpleFilter:
     def __init__(self, path_words):
@@ -44,11 +52,52 @@ class SimpleFilter:
         return [self.morph_analyzer.parse(word)[0].normal_form for word in text.split()]
 
 class BigramFilter:
-    def __init__(self):
-        self.bigrams = {}
-    def fit(self, path):
-        pass
-    def to_csv(self, path_save):
-        pass
+    def __init__(self, path_voc=None):
+        self.morph_analyzer = MorphAnalyzer()
+        if path_voc is not None:
+            self.bigramms = self._load_voc()
+    
+    def train(self, text1, text2):
+        text1, text2 = self._process(text1), self._process(text2)
+        bigramm1 = nltk.FreqDist(nltk.bigrams(text1))
+        bigramm2 = nltk.FreqDist(nltk.bigrams(text2))
+        bigramm1_df = self._bigramm_to_df(bigramm1.most_common())
+        bigramm2_df = self._bigramm_to_df(bigramm2.most_common())
+        self.bigramms = self._intersection(bigramm1_df, bigramm2_df)
+
+    def _bigramm_to_df(self, bigramm):
+        return pd.DataFrame([
+            {"bigramm": i[0][0]+"_"+i[0][1], "freq": i[1]}
+            for i in bigramm])
+
+    def save_voc(self, path_save):
+        self.bigramms.to_csv(path_save)#("bigramms.csv")
+
     def match(self, text):
-        pass
+        s = []
+        for t in text.split("."):
+            s += self._process(t)
+        bigramm = self._bigramm_to_df(nltk.FreqDist(nltk.bigrams(s)).most_common())
+        return 0
+
+    def _process(self, t):
+        s = []
+        for t in line.split("."):
+            t = t.lower()
+            t = re.sub(r'[^а-яё ]+', ' ', t)
+            t = t.replace("  ", " ")
+            s += [self.morph_analyzer.parse(word)[0].normal_form for word in t.split() if word not in STOPWORDS]
+        return s
+
+    def _process_file(self, path):
+        s = []
+        with open(path, "r") as rdr:
+            for line in rdr:
+                s += self._process(line)
+        return s
+    
+    def _intersection(self, bigramm1, bigramm2):
+        return pd.merge(bigramm1, bigramm2, how="inner", on=["bigramm"])
+
+    def _load_voc(self, path_voc):
+        self.bigrams = pd.read_csv(path_voc)

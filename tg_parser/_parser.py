@@ -57,6 +57,7 @@ def get_posts_in_span(date, span, client, channel_username, batch=100):
     channel_entity=client.get_entity(channel_username)
     res = []
     min_id, max_id = get_min_max_id_for_span(date, span, client, channel_username)
+    print(min_id, max_id)
     for i in range(min_id, max_id, batch):
         mx_id = i + batch if i + batch <= max_id else max_id
         posts = get_posts(client, channel_entity, min_id=i, max_id=mx_id, offset_id=mx_id, limit=batch)
